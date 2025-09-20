@@ -20,16 +20,12 @@ export class PlayerManager extends EntityManager {
       private readonly speed = 1/10;
 
    async init(){
-
-
-
      this.fsm = this.addComponent(PlayerStateMachine)
-
    super.init({
       // 2，8
 
-      x:-1,
-      y:2,
+      x:-3,
+      y:0,
       type:ENTITY_TYPE_ENUM.PLAYER,
       direction:DIRECTION_ENUM.TOP,
       state:ENTITY_STATE_ENUM.IDLE
@@ -39,6 +35,7 @@ export class PlayerManager extends EntityManager {
       this.direction = DIRECTION_ENUM.TOP
 
     await this.fsm.init()
+
    this.state = ENTITY_STATE_ENUM.IDLE
     EventManager.Instance.on(EVENT_ENUM.PLAYER_CTRL,this.inputHandle,this)
     EventManager.Instance.on(EVENT_ENUM.ATTACK_PLAYER,this.onDeath,this)
@@ -83,11 +80,15 @@ export class PlayerManager extends EntityManager {
   // }
   if (this.isMoving) return;
 
-  if (this.state === ENTITY_STATE_ENUM.DEATH || this.state === ENTITY_STATE_ENUM.AIRDEATH) return;
+  if (this.state === ENTITY_STATE_ENUM.DEATH
+    || this.state === ENTITY_STATE_ENUM.AIRDEATH
+    || this.state === ENTITY_STATE_ENUM.ATTACK  ) return;
 
   const { eX, eY } = this.willAttack(inputDirection);
   if (eX !== undefined && eY !== undefined) {
     EventManager.Instance.emit(EVENT_ENUM.ATTACK_ENEMY, eX, eY);
+    EventManager.Instance.emit(EVENT_ENUM.DOOR_OPEN)
+
     return;
   }
 
@@ -96,8 +97,11 @@ export class PlayerManager extends EntityManager {
 }
 
 willAttack(type: CONTROLLER_ENUM) {
-  const enemies = DataManager.Instance.enemies;
-  console.log(enemies);
+
+   this.isMoving = false;
+  const enemies = DataManager.Instance.enemies.filter(enemis => enemis.state !== ENTITY_STATE_ENUM.DEATH);
+
+
 
   for (let i = 0; i < enemies.length; i++) {
     const { x: eX, y: eY, id: eId } = enemies[i];

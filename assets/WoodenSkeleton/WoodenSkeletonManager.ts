@@ -16,8 +16,8 @@ export class WoodenSkeletonManager extends EntityManager {
      this.fsm = this.addComponent(WoodenSkeletonStateMachine)
 
    super.init({
-      x:-1,
-      y:-4,
+      x:2,
+      y:-3,
       type:ENTITY_TYPE_ENUM.SKELETON_WOODEN,
       direction:DIRECTION_ENUM.TOP,
       state:ENTITY_STATE_ENUM.IDLE

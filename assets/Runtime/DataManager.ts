@@ -5,6 +5,7 @@ import { PlayerManager } from '../Player/PlayerManager'
 import { TileManager } from '../Scripts/Tile/TileManager'
 import levels from '../levels'
 import { WoodenSkeletonManager } from '../WoodenSkeleton/WoodenSkeletonManager'
+import { DoorManager } from '../Scripts/Door/DoorManager'
 
 
 
@@ -23,6 +24,7 @@ export default class DataManager extends Single {
   mapInfo: Array<Array<ITile>> = []
   tileInfo: Array<Array<TileManager>> = []
   enemies:WoodenSkeletonManager[]
+  door:DoorManager
 
 
   private constructor() {
@@ -39,9 +41,10 @@ export default class DataManager extends Single {
     this.enemies = []
     // //活动元素信息
     this.player = null
+
+    this.door = null
   }
 
-  // 初始化关卡数据
   initLevel(levelIndex: number = 1) {
     const levelKey = `level${levelIndex}`
     const level = levels[levelKey]
@@ -56,4 +59,5 @@ export default class DataManager extends Single {
       console.error(`Level ${levelIndex} not found!`)
     }
   }
+
 }
