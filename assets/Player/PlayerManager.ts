@@ -15,8 +15,6 @@ export class PlayerManager extends EntityManager {
       isMoving:boolean = false
       targetX:number = 0
       targetY:number = 0
-
-
       private readonly speed = 1/10;
 
    async init(){
@@ -74,10 +72,7 @@ export class PlayerManager extends EntityManager {
     }
 
   inputHandle(inputDirection: CONTROLLER_ENUM) {
-  // 目前先不判断block
-  // if(this.willBlock(inputDirection)){
-  //    return
-  // }
+
   if (this.isMoving) return;
 
   if (this.state === ENTITY_STATE_ENUM.DEATH
