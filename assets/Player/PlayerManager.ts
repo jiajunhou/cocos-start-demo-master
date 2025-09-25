@@ -7,6 +7,7 @@ import { EntityManager } from '../Base/EntityManager';
 import DataManager from '../Runtime/DataManager';
 import { TileManager } from '../Scripts/Tile/TileManager';
 import { WoodenSkeletonManager } from '../WoodenSkeleton/WoodenSkeletonManager';
+import { IEntity } from '../levels';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerManager')
@@ -17,17 +18,9 @@ export class PlayerManager extends EntityManager {
       targetY:number = 0
       private readonly speed = 1/10;
 
-   async init(){
+   async init(params:IEntity){
      this.fsm = this.addComponent(PlayerStateMachine)
-   super.init({
-      // 2，8
-
-      x:-3,
-      y:0,
-      type:ENTITY_TYPE_ENUM.PLAYER,
-      direction:DIRECTION_ENUM.TOP,
-      state:ENTITY_STATE_ENUM.IDLE
-   })
+   super.init(params)
       this.targetX = this.x
       this.targetY = this.y
       this.direction = DIRECTION_ENUM.TOP
@@ -71,7 +64,7 @@ export class PlayerManager extends EntityManager {
       this.state = type
     }
 
-  inputHandle(inputDirection: CONTROLLER_ENUM) {
+  async inputHandle(inputDirection: CONTROLLER_ENUM) {
 
   if (this.isMoving) return;
 
@@ -81,7 +74,17 @@ export class PlayerManager extends EntityManager {
 
   const { eX, eY } = this.willAttack(inputDirection);
   if (eX !== undefined && eY !== undefined) {
+
+
     EventManager.Instance.emit(EVENT_ENUM.ATTACK_ENEMY, eX, eY);
+
+    await new Promise(reslove => {
+      this.scheduleOnce(() => {
+        reslove(null);
+      }, 1);
+   }
+    )
+
     EventManager.Instance.emit(EVENT_ENUM.DOOR_OPEN)
 
     return;

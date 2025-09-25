@@ -10,6 +10,7 @@ import TurnRightSubStateMachine from './TurnRightSubStateManager';
 import BlockTurnRightSubStateMachine from './BlockTurnRightSubStateMachine';
 import DeathSubStateMachine from './DeathSubStateMachine';
 import AttackSubStateMachine from './AttackSubStateMachine';
+import AirDeathSubStateMachine from './AirDeathSubStateMachine';
 const { ccclass, property } = _decorator;
 
 
@@ -50,6 +51,7 @@ initAnimationEvent(){
 }
 
   initParmas(){
+     this.params.set(PARAMS_NAME_ENUM.AIRDEATH,getInitParamsTrigger())
     this.params.set(PARAMS_NAME_ENUM.IDLE,getInitParamsTrigger())
     this.params.set(PARAMS_NAME_ENUM.TURNLEFT,getInitParamsTrigger())
     this.params.set(PARAMS_NAME_ENUM.TURNRIGHT,getInitParamsTrigger())
@@ -63,6 +65,10 @@ initAnimationEvent(){
 
 
   initStateMachines(){
+      this.stateMachines.set(PARAMS_NAME_ENUM.AIRDEATH,
+      new AirDeathSubStateMachine(this)
+    )
+
     this.stateMachines.set(PARAMS_NAME_ENUM.IDLE,
       new IdleSubStateMachine(this)
     )
@@ -106,12 +112,15 @@ initAnimationEvent(){
       case this.stateMachines.get(PARAMS_NAME_ENUM.BLOCKTURNRIGHT):
       case this.stateMachines.get(PARAMS_NAME_ENUM.ATTACK):
       case this.stateMachines.get(PARAMS_NAME_ENUM.DEATH):
+      case this.stateMachines.get(PARAMS_NAME_ENUM.AIRDEATH):
       case this.stateMachines.get(PARAMS_NAME_ENUM.IDLE):
         if(this,this.params.get(PARAMS_NAME_ENUM.BLOCKTURNLEFT).value){
            this.currentState = this.stateMachines.get(PARAMS_NAME_ENUM.BLOCKTURNLEFT)
           //  this.params.get((PARAMS_NAME_ENUM.BLOCKTURNLEFT)).value = false
         }else if(this,this.params.get(PARAMS_NAME_ENUM.ATTACK).value){
           this.currentState = this.stateMachines.get(PARAMS_NAME_ENUM.ATTACK)
+        }else if(this,this.params.get(PARAMS_NAME_ENUM.AIRDEATH).value){
+          this.currentState = this.stateMachines.get(PARAMS_NAME_ENUM.AIRDEATH)
         }else if(this,this.params.get(PARAMS_NAME_ENUM.DEATH).value){
           this.currentState = this.stateMachines.get(PARAMS_NAME_ENUM.DEATH)
         }

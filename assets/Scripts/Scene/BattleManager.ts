@@ -5,9 +5,11 @@ import { ControllerManager } from '../UI/ControllerManager';
 import EventManager from '../../Runtime/EventManager';
 import DataManager from '../../Runtime/DataManager';
 import { WoodenSkeletonManager } from '../../WoodenSkeleton/WoodenSkeletonManager';
-import { ENTITY_STATE_ENUM, EVENT_ENUM } from '../../Enum';
+import { DIRECTION_ENUM, ENTITY_STATE_ENUM, ENTITY_TYPE_ENUM, EVENT_ENUM } from '../../Enum';
 import { DoorManager } from '../Door/DoorManager';
 import { createUINode } from '../Untils';
+import { IronSkeletonManager } from '../IronSkeleton/IronSkeletonManager';
+import { BurstManager } from '../Burst/BurstManager';
 
 const { ccclass, property } = _decorator;
 
@@ -28,15 +30,15 @@ export class BattleManager extends Component {
         // 先初始
         DataManager.Instance.initLevel(1)
         await this.generateTileMap()
+        await this.generateBurst()
         await  this.gengeratePlayer()
         await  this.gengerateEnemies()
         await this.gengerateDoor()
+        // await this.gengerateIronEnemies()
         this.generateController()
     }
 
-    update(deltaTime: number) {
-
-    }
+    update(deltaTime: number) {}
 
 
         async gengerateDoor(){
@@ -49,29 +51,56 @@ export class BattleManager extends Component {
 
         }
 
+       async generateBurst(){
+          const node = createUINode()
+            node.setParent(this.stage)
+            const burstManager = node.addComponent(BurstManager)
+            await burstManager.init({
+                      x:-3,
+                      y:-2,
+                      type:ENTITY_TYPE_ENUM.BURST,
+                      direction:DIRECTION_ENUM.TOP,
+                      state:ENTITY_STATE_ENUM.IDLE
+            })
+            DataManager.Instance.burstManger.push(burstManager);
+       }
+
 
    async gengerateEnemies(){
-
-        // if (DataManager.Instance.enemies.length > 0) {
-        //     return;
-        // }
-
           const node = createUINode()
             node.setParent(this.stage)
             const woodenSkeleton = node.addComponent(WoodenSkeletonManager)
-            await woodenSkeleton.init()
+            await woodenSkeleton.init(
+                {
+                      x:2,
+                      y:-3,
+                      type:ENTITY_TYPE_ENUM.SKELETON_WOODEN,
+                      direction:DIRECTION_ENUM.TOP,
+                      state:ENTITY_STATE_ENUM.IDLE
+                   }
+            )
             DataManager.Instance.enemies.push(woodenSkeleton)
-
-        // const stage = new Node();
-        // stage.setParent(this.node)
-        // const enemies = new Node();
-        // enemies.setParent(stage)
-
-        // const enemiesManager = enemies.addComponent(WoodenSkeletonManager)
-
-        // await enemiesManager.init()
-        // DataManager.Instance.enemies.push(enemiesManager)
     }
+
+
+   async gengerateIronEnemies(){
+          const node = createUINode()
+            node.setParent(this.stage)
+            const ironskeleton = node.addComponent(IronSkeletonManager)
+            await ironskeleton.init(
+                {
+                      x:2,
+                      y:-5,
+                      type:ENTITY_TYPE_ENUM.SKELETON_IRON,
+                      direction:DIRECTION_ENUM.TOP,
+                      state:ENTITY_STATE_ENUM.IDLE
+                   }
+            )
+            DataManager.Instance.enemies.push(ironskeleton)
+    }
+
+
+
 
       adaptMapPos() {
     const { mapRowCount, mapColumnCount } = DataManager.Instance
@@ -89,20 +118,17 @@ export class BattleManager extends Component {
             const node = createUINode()
             node.setParent(this.stage)
             const player = node.addComponent(PlayerManager)
-            await player.init()
+            await player.init({
+                    x:-3,
+                    y:0,
+                    type:ENTITY_TYPE_ENUM.PLAYER,
+                    direction:DIRECTION_ENUM.TOP,
+                    state:ENTITY_STATE_ENUM.IDLE
+            })
             DataManager.Instance.player = player
             EventManager.Instance.emit(EVENT_ENUM.PLAYER_BORN)
 
-        // const stage = new Node();
-        // stage.setParent(this.node)
-        // const player = new Node();
-        // player.setParent(stage)
 
-        // const playerManager = player.addComponent(PlayerManager)
-
-        // await playerManager.init()
-        // DataManager.Instance.player = playerManager
-        // EventManager.Instance.emit(EVENT_ENUM.PLAYER_BORN)
     }
 
 
@@ -112,21 +138,6 @@ export class BattleManager extends Component {
             node.setParent(this.stage)
             const tilemap = node.addComponent(TileMapManager)
             await tilemap.init()
-            // this.adaptMapPos()
-
-    //          const node = createUINode()
-    // node.setParent(this.stage)
-    // const tileMapManager = node.addComponent(TileMapManager)
-    // await tileMapManager.init()
-    // this.adaptMapPos()
-//   const stage = new Node();
-//   stage.setParent(this.node);
-//   const tileMap = new Node();
-//   tileMap.setParent(stage);
-
-//   const tileMapManager = tileMap.addComponent(TileMapManager);
-
-//  await tileMapManager.init();
 }
 
 

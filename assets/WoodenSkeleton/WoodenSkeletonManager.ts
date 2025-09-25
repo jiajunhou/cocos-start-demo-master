@@ -5,23 +5,19 @@ import { EntityManager } from '../Base/EntityManager';
 import DataManager from '../Runtime/DataManager';
 
 import { WoodenSkeletonStateMachine } from './WoodenSkeletonStateMachine';
+import { IEntity } from '../levels';
+import { EnemyManager } from '../Base/EnemyManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('WoodenSkeletonManager')
-export class WoodenSkeletonManager extends EntityManager {
+export class WoodenSkeletonManager extends EnemyManager {
 
    public scope:number
 
-   async init(){
+   async init(params:IEntity){
      this.fsm = this.addComponent(WoodenSkeletonStateMachine)
 
-   super.init({
-      x:2,
-      y:-3,
-      type:ENTITY_TYPE_ENUM.SKELETON_WOODEN,
-      direction:DIRECTION_ENUM.TOP,
-      state:ENTITY_STATE_ENUM.IDLE
-   })
+   super.init(params)
 
       this.direction = DIRECTION_ENUM.TOP
 
@@ -41,17 +37,6 @@ export class WoodenSkeletonManager extends EntityManager {
       EventManager.Instance.off(EVENT_ENUM.ATTACK_ENEMY,this.onDeath)
  }
 
-
-onDeath(attackX: number, attackY: number){
-
-   if(this.state === ENTITY_STATE_ENUM.DEATH || this.state === ENTITY_STATE_ENUM.AIRDEATH){
-      return;
-   }
-
-   if(this.x === attackX && this.y === attackY){
-      this.state = ENTITY_STATE_ENUM.DEATH;
-   }
-}
 
   onAttack(){
       if(this.state === ENTITY_STATE_ENUM.DEATH || this.state === ENTITY_STATE_ENUM.AIRDEATH
@@ -74,21 +59,5 @@ onDeath(attackX: number, attackY: number){
     }
 
 
-    onChangeDirection(){
-      if(this.state === ENTITY_STATE_ENUM.DEATH || this.state === ENTITY_STATE_ENUM.AIRDEATH || !DataManager.Instance.player) return
-      const {x:playerX,y:playerY} = DataManager.Instance.player
-      const disX = Math.abs(this.x - playerX)
-      const disY = Math.abs(this.y - playerY)
-
-      if(playerX >= this.x && playerY <= this.y){
-         this.direction = disY > disX ?DIRECTION_ENUM.TOP:DIRECTION_ENUM.RIGHT
-      }else if(playerX <= this.x && playerY <= this.y){
-              this.direction = disY > disX ?DIRECTION_ENUM.TOP:DIRECTION_ENUM.LEFT
-      }else if(playerX <= this.x && playerY >= this.y){
-              this.direction = disY > disX ?DIRECTION_ENUM.BOTTOM:DIRECTION_ENUM.LEFT
-      }else if(playerX >= this.x && playerY >= this.y){
-              this.direction = disY > disX ?DIRECTION_ENUM.BOTTOM:DIRECTION_ENUM.RIGHT
-      }
-    }
 
 }
