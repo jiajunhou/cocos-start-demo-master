@@ -10,6 +10,7 @@ import { DoorManager } from '../Door/DoorManager';
 import { createUINode } from '../Untils';
 import { IronSkeletonManager } from '../IronSkeleton/IronSkeletonManager';
 import { BurstManager } from '../Burst/BurstManager';
+import { SpikesManager } from '../Spikes/SpikesManager';
 
 const { ccclass, property } = _decorator;
 
@@ -29,8 +30,10 @@ export class BattleManager extends Component {
         this.stage.setSiblingIndex(2)
         // 先初始
         DataManager.Instance.initLevel(1)
+
         await this.generateTileMap()
-        await this.generateBurst()
+         await this.generateSpikes()
+        // await this.generateBurst()
         await  this.gengeratePlayer()
         await  this.gengerateEnemies()
         await this.gengerateDoor()
@@ -40,6 +43,18 @@ export class BattleManager extends Component {
 
     update(deltaTime: number) {}
 
+        async generateSpikes(){
+                const node = createUINode()
+                node.setParent(this.stage)
+                const spikes = node.addComponent(SpikesManager)
+                await spikes.init({
+                x:-3,
+                y:-2,
+                type:ENTITY_TYPE_ENUM.SPIKES_ONE,
+                count:0,
+                })
+                DataManager.Instance.spikesManager.push(spikes);
+        }
 
         async gengerateDoor(){
 

@@ -9,6 +9,7 @@ import { DoorManager } from '../Scripts/Door/DoorManager'
 import { IronSkeletonManager } from '../Scripts/IronSkeleton/IronSkeletonManager'
 import { EnemyManager } from '../Base/EnemyManager'
 import { BurstManager } from '../Scripts/Burst/BurstManager'
+import { SpikesManager } from '../Scripts/Spikes/SpikesManager'
 
 
 
@@ -29,7 +30,7 @@ export default class DataManager extends Single {
   enemies:EnemyManager[]
   door:DoorManager
   burstManger:BurstManager[]
-
+  spikesManager:SpikesManager[]
   private constructor() {
     super()
     this.reset()
@@ -37,6 +38,7 @@ export default class DataManager extends Single {
 
   reset() {
     //地图信息
+    this.spikesManager = []
     this.mapInfo = []
     this.tileInfo = []
     this.mapRowCount = 0
