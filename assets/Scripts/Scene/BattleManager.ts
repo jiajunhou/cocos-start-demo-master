@@ -50,7 +50,7 @@ export class BattleManager extends Component {
                 await spikes.init({
                 x:-3,
                 y:-2,
-                type:ENTITY_TYPE_ENUM.SPIKES_ONE,
+                type:ENTITY_TYPE_ENUM.SPIKES_THREE,
                 count:0,
                 })
                 DataManager.Instance.spikesManager.push(spikes);

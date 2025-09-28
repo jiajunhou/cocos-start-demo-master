@@ -4,6 +4,9 @@ import { ENTITY_STATE_ENUM, ENTITY_TYPE_ENUM, PARAMS_NAME_ENUM, SPIKES_TYPE_MAP_
 import { EntityManager } from '../../Base/EntityManager';
 import IdleSubStateMachine from './SpikesOneSubStateMachine';
 import SpikesOneSubStateMachine from './SpikesOneSubStateMachine';
+import SpikesTwoSubStateMachine from './SpikesTwoSubStateMachine';
+import SpikesThreeSubStateMachine from './SpikesThreeSubStateMachine';
+import SpikesFourSubStateMachine from './SpikesFourSubStateMachine';
 const { ccclass, property } = _decorator;
 
 
@@ -53,6 +56,20 @@ initAnimationEvent(){
       new SpikesOneSubStateMachine(this)
     )
 
+     this.stateMachines.set(ENTITY_TYPE_ENUM.SPIKES_TWO,
+      new SpikesTwoSubStateMachine(this)
+    )
+
+     this.stateMachines.set(ENTITY_TYPE_ENUM.SPIKES_THREE,
+      new SpikesThreeSubStateMachine(this)
+    )
+
+     this.stateMachines.set(ENTITY_TYPE_ENUM.SPIKES_FOUR,
+      new SpikesFourSubStateMachine(this)
+    )
+
+
+
   }
 
 
@@ -61,9 +78,18 @@ run() {
 
     switch (this.currentState) {
       case this.stateMachines.get(ENTITY_TYPE_ENUM.SPIKES_ONE):
+        case this.stateMachines.get(ENTITY_TYPE_ENUM.SPIKES_TWO):
+          case this.stateMachines.get(ENTITY_TYPE_ENUM.SPIKES_THREE):
+            case this.stateMachines.get(ENTITY_TYPE_ENUM.SPIKES_FOUR):
         if(value === SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM.SPIKES_ONE){
           this.currentState = this.stateMachines.get(ENTITY_TYPE_ENUM.SPIKES_ONE)
-        } else {
+        } else if(value === SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM.SPIKES_TWO){
+          this.currentState = this.stateMachines.get(ENTITY_TYPE_ENUM.SPIKES_TWO)
+        } else if(value === SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM.SPIKES_THREE){
+          this.currentState = this.stateMachines.get(ENTITY_TYPE_ENUM.SPIKES_THREE)
+        } else if(value === SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM.SPIKES_FOUR){
+          this.currentState = this.stateMachines.get(ENTITY_TYPE_ENUM.SPIKES_FOUR)
+        }else {
           this.currentState = this.currentState
         }
         break
