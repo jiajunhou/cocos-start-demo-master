@@ -1,9 +1,10 @@
 import { _decorator, animation, Animation, AnimationClip, Component, Layers, Node, resources, Sprite, SpriteFrame, UITransform } from 'cc';
 import StateMachine from '../../Base/StateMachine';
 import { randomByLength } from '../Untils';
-import { ENTITY_TYPE_ENUM, PARAMS_NAME_ENUM, SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM } from '../../Enum';
+import { ENTITY_STATE_ENUM, ENTITY_TYPE_ENUM, EVENT_ENUM, PARAMS_NAME_ENUM, SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM } from '../../Enum';
 import { IEntity, ISpikes } from '../../levels';
 import { SpikesStateMachine } from './SpikesStateMachine';
+import EventManager from '../../Runtime/EventManager';
 
 const { ccclass, property } = _decorator;
 
@@ -36,6 +37,9 @@ export class SpikesManager extends Component {
       }
 
 
+      backZero(){
+        this.count = 0
+       }
 
 
 
@@ -57,7 +61,19 @@ export class SpikesManager extends Component {
       this.totalCount = SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM[this.type]
       this.count = params.count
 
+       EventManager.Instance.on(EVENT_ENUM.PLAYER_MOVE_END, this.onLoop, this)
     }
+
+    onLoop() {
+      console.log('TOTAL=======',this.totalCount,'COUNT======',this.count)
+    if (this.count == this.totalCount) {
+      this.count = 1
+    } else {
+      this.count++
+    }
+
+  }
+
 
     update() {
 
@@ -66,7 +82,7 @@ export class SpikesManager extends Component {
     }
 
      onDestroy() {
-
+      EventManager.Instance.off(EVENT_ENUM.PLAYER_MOVE_END,this.onLoop)
     }
 
 

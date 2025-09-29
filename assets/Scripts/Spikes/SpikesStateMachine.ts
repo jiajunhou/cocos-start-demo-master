@@ -7,6 +7,7 @@ import SpikesOneSubStateMachine from './SpikesOneSubStateMachine';
 import SpikesTwoSubStateMachine from './SpikesTwoSubStateMachine';
 import SpikesThreeSubStateMachine from './SpikesThreeSubStateMachine';
 import SpikesFourSubStateMachine from './SpikesFourSubStateMachine';
+import { SpikesManager } from './SpikesManager';
 const { ccclass, property } = _decorator;
 
 
@@ -33,14 +34,17 @@ async init(){
 }
 
 initAnimationEvent(){
-  // this.animationComponent.on(Animation.EventType.FINISHED,()=>{
-  //   const name = this.animationComponent.defaultClip.name
+  this.animationComponent.on(Animation.EventType.FINISHED,()=>{
+    const name = this.animationComponent.defaultClip.name
+    const value = this.getParams(PARAMS_NAME_ENUM.SPIKES_CUR_COUNT)
+    if(value === SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM.SPIKES_ONE && name.includes('spikesone/two') ||
+        value === SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM.SPIKES_TWO && name.includes('spikestwo/three') ||
+        value === SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM.SPIKES_THREE && name.includes('spikesthree/four')||
+        value === SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM.SPIKES_FOUR && name.includes('spikesfour/five')){
+      this.node.getComponent(SpikesManager).backZero();
+    }
 
-  //   const whiteList = ['attack']
-  //   if(whiteList.some(v =>name.includes(v))){
-  //     this.node.getComponent(EntityManager).state = ENTITY_STATE_ENUM.IDLE
-  //   }
-  // })
+  })
 
 }
 
