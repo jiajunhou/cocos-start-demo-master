@@ -5,6 +5,7 @@ import { ENTITY_STATE_ENUM, ENTITY_TYPE_ENUM, EVENT_ENUM, PARAMS_NAME_ENUM, SPIK
 import { IEntity, ISpikes } from '../../levels';
 import { SpikesStateMachine } from './SpikesStateMachine';
 import EventManager from '../../Runtime/EventManager';
+import DataManager from '../../Runtime/DataManager';
 
 const { ccclass, property } = _decorator;
 
@@ -72,8 +73,18 @@ export class SpikesManager extends Component {
       this.count++
     }
 
+    this.onAttack();
+
   }
 
+
+  onAttack() {
+    if(!DataManager.Instance.player) return
+     const {x:playerX,y:playerY} = DataManager.Instance.player
+     if(this.x === playerX && this.y === playerY && this.count === this.totalCount){
+        EventManager.Instance.emit(EVENT_ENUM.ATTACK_PLAYER,ENTITY_STATE_ENUM.DEATH)
+     }
+  }
 
     update() {
 
