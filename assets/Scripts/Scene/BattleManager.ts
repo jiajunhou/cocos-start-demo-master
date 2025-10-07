@@ -11,6 +11,7 @@ import { createUINode } from '../Untils';
 import { IronSkeletonManager } from '../IronSkeleton/IronSkeletonManager';
 import { BurstManager } from '../Burst/BurstManager';
 import { SpikesManager } from '../Spikes/SpikesManager';
+import FadeManager from '../../Runtime/FadeManager';
 
 const { ccclass, property } = _decorator;
 
@@ -31,6 +32,9 @@ export class BattleManager extends Component {
         // 先初始
         DataManager.Instance.initLevel(1)
 
+
+
+        // await FadeManager.Instance.fadeIn()
         await this.generateTileMap()
          await this.generateSpikes()
         // await this.generateBurst()
@@ -39,6 +43,8 @@ export class BattleManager extends Component {
         await this.gengerateDoor()
         // await this.gengerateIronEnemies()
         this.generateController()
+
+        //  await FadeManager.Instance.fadeOut()
     }
 
     update(deltaTime: number) {}
